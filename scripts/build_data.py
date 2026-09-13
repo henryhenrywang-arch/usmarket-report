@@ -75,6 +75,22 @@ def clean(x, d=2):
     return round(f, d)
 
 
+def close_series(raw, sym):
+    """Safely pull a 1-D Close series for one ticker out of a yf.download()
+    result, no matter whether pandas gave back a Series or (due to a partial
+    download failure / duplicate column) a DataFrame."""
+    try:
+        s = raw["Close"][sym]
+    except Exception:
+        return None
+    if isinstance(s, pd.DataFrame):
+        if s.shape[1] == 0:
+            return None
+        s = s.iloc[:, 0]
+    s = s.dropna()
+    return s if len(s) >= 2 else None
+
+
 # ---------------------------- indices & vix ---------------------------------
 
 def build_indices():
@@ -88,11 +104,8 @@ def build_indices():
                        auto_adjust=True, progress=False, group_by="column")
     out = []
     for sym, name in tickers.items():
-        try:
-            s = raw["Close"][sym].dropna()
-        except Exception:
-            continue
-        if len(s) < 2:
+        s = close_series(raw, sym)
+        if s is None:
             continue
         last, prev = float(s.iloc[-1]), float(s.iloc[-2])
         w1 = float(s.iloc[-6]) if len(s) > 5 else None
@@ -109,7 +122,10 @@ def build_indices():
     vix_note = None
     v_last = v_prev = None
     if not vix.empty and len(vix) > 1:
-        s = vix["Close"].dropna()
+        s = vix["Close"]
+        if isinstance(s, pd.DataFrame):
+            s = s.iloc[:, 0]
+        s = s.dropna()
         v_last, v_prev = float(s.iloc[-1]), float(s.iloc[-2])
         chg_pct = pct(v_last, v_prev)
         streak_high = (s.tail(10) > 17).sum()
@@ -168,11 +184,8 @@ def build_commodities():
                        auto_adjust=True, progress=False, group_by="column")
     out = []
     for sym, (name, unit) in tickers.items():
-        try:
-            s = raw["Close"][sym].dropna()
-        except Exception:
-            continue
-        if len(s) < 2:
+        s = close_series(raw, sym)
+        if s is None:
             continue
         last, prev = float(s.iloc[-1]), float(s.iloc[-2])
         out.append({
