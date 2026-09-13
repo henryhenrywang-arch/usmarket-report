@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>每日市場觀察</title>
+<meta name="description" content="美股、公債殖利率、CPI、Fed 政策路徑的每日盤後彙整報告">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f5f2ea; --paper-2:#efeade; --ink:#1c1a16; --muted:#7c7566;
+    --line:#ddd5c4; --brass:#8a6a2f; --up:#b3392c; --down:#2f7d5a; --radius:2px;
+  }
+  [data-theme="dark"]{
+    --paper:#15130f; --paper-2:#1c1a15; --ink:#eee7d8; --muted:#8e8677;
+    --line:#332f26; --brass:#c9a24a; --up:#e2685a; --down:#4fae84;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:"Noto Sans TC",system-ui,sans-serif;line-height:1.6;
+    font-variant-numeric:tabular-nums;transition:background .2s,color .2s}
+  .serif{font-family:"Noto Serif TC",serif}
+  .wrap{max-width:760px;margin:0 auto;padding:18px 16px 60px}
+  a{color:var(--brass)}
+
+  .toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+  .toolbar button{
+    flex:1 1 auto;min-width:120px;font:inherit;font-size:13px;color:var(--ink);
+    background:var(--paper-2);border:1px solid var(--line);border-radius:var(--radius);
+    padding:11px 10px;cursor:pointer;
+  }
+  .toolbar button:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+
+  .eyebrow{font-size:11px;letter-spacing:.12em;color:var(--muted);display:flex;justify-content:space-between}
+  h1{font-size:30px;margin:6px 0 18px;font-weight:700}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-bottom:4px}
+  .meta b{color:var(--ink);font-weight:500}
+
+  .hero{display:grid;grid-template-columns:repeat(3,1fr);border-top:2px solid var(--ink);
+    margin-top:16px}
+  .hero .cell{border-bottom:1px solid var(--line);padding:14px 12px 14px 0}
+  .hero .cell:nth-child(3n+2),.hero .cell:nth-child(3n+3){padding-left:12px}
+  .hero .lbl{font-size:11px;letter-spacing:.1em;color:var(--muted)}
+  .hero .num{font-size:22px;font-weight:700;margin:4px 0 2px}
+  .hero .chg{font-size:14px}
+  @media(max-width:480px){.hero{grid-template-columns:repeat(2,1fr)}}
+
+  section{padding:26px 0;border-bottom:1px solid var(--line)}
+  .sec-head{display:flex;align-items:baseline;gap:10px;margin-bottom:14px}
+  .sec-num{font-size:20px;color:var(--brass)}
+  .sec-title{font-size:16px;font-weight:700}
+  .sec-tag{margin-left:auto;font-size:11px;letter-spacing:.1em;color:var(--muted)}
+
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{text-align:right;font-weight:500;color:var(--muted);font-size:12px;padding:6px 0}
+  th:first-child,td:first-child{text-align:left}
+  td{text-align:right;padding:9px 0;border-top:1px solid var(--line)}
+  tr:first-child td{border-top:none}
+  .name-cell{font-weight:600}
+  .up{color:var(--up)} .down{color:var(--down)} .flat{color:var(--muted)}
+  .cell-stack .p1{font-weight:700}
+  .cell-stack .p2{font-size:11px;color:var(--muted)}
+
+  .note{margin:10px 0 0;padding:10px 12px;border-left:2px solid var(--brass);
+    font-size:13px;color:var(--muted);background:var(--paper-2)}
+
+  .kv{display:grid;grid-template-columns:1fr auto;gap:6px 12px;font-size:14px;padding:7px 0;
+    border-top:1px solid var(--line)}
+  .kv:first-of-type{border-top:none}
+
+  .fed-bar{display:flex;height:26px;border-radius:var(--radius);overflow:hidden;margin:12px 0 8px}
+  .fed-bar div{display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff}
+  .fed-legend{display:flex;gap:16px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+  .swatch{display:inline-block;width:10px;height:10px;margin-right:5px;vertical-align:middle;border-radius:1px}
+
+  .watch-row{display:grid;grid-template-columns:1fr 1fr 1.4fr;gap:10px;padding:10px 0;
+    border-top:1px solid var(--line);font-size:13px}
+  .watch-row:first-child{border-top:none}
+  .watch-row .th{font-size:11px;color:var(--muted);letter-spacing:.06em}
+  .watch-row .thr{color:var(--brass);font-weight:700}
+
+  .cal-row{display:grid;grid-template-columns:110px 1fr;gap:10px;padding:9px 0;
+    border-top:1px solid var(--line);font-size:13px}
+  .cal-row:first-child{border-top:none}
+  .cal-row .d{color:var(--muted)}
+
+  ol.sources{margin:0;padding-left:20px;font-size:12.5px;color:var(--muted)}
+  ol.sources li{margin-bottom:8px;word-break:break-all}
+  .legend-foot{font-size:12px;color:var(--muted);margin-top:14px}
+  .legend-foot .swatch{border-radius:50%}
+
+  #hist-modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;
+    align-items:flex-end;justify-content:center;z-index:20}
+  #hist-modal.open{display:flex}
+  .sheet{background:var(--paper);width:100%;max-width:760px;max-height:70vh;overflow:auto;
+    border-radius:10px 10px 0 0;padding:16px}
+  .sheet h3{margin:0 0 10px;font-size:15px}
+  .sheet button.dateitem{display:block;width:100%;text-align:left;background:none;border:0;
+    border-top:1px solid var(--line);padding:10px 2px;font:inherit;color:var(--ink);cursor:pointer}
+  .sheet button.dateitem:first-child{border-top:none}
+  .sheet .close{margin-top:10px;width:100%}
+
+  .state{padding:60px 0;text-align:center;color:var(--muted);font-size:14px}
+  @media print{.toolbar{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="toolbar">
+    <button id="btn-hist">☰ 歷史查詢</button>
+    <button id="btn-save">↓ 另存新檔（HTML）</button>
+    <button id="btn-print">⎙ 列印／存成 PDF</button>
+    <button id="btn-theme">◐ 深／淺色</button>
+  </div>
+  <div id="app"><p class="state">正在讀取最新報告…</p></div>
+</div>
+
+<div id="hist-modal">
+  <div class="sheet">
+    <h3>歷史報告</h3>
+    <div id="hist-list"></div>
+    <button class="close" id="hist-close">關閉</button>
+  </div>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const fmt = (v,d=2) => v==null ? "—" : Number(v).toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d});
+const signPct = v => v==null ? "—" : (v>0?"＋":v<0?"":"") + v.toFixed(2) + "%";
+const signBp = v => v==null ? "—" : (v>0?"＋":v<0?"":"") + v.toFixed(1) + " bp";
+const tone = v => v==null||Math.abs(v)<0.005 ? "flat" : v>0 ? "up" : "down";
+let R = null;
+
+function heroCell(label, value, chg, unit=""){
+  return `<div class="cell">
+    <div class="lbl">${label}</div>
+    <div class="num">${value}${unit}</div>
+    <div class="chg ${tone(chg)}">${signPct(chg)}</div>
+  </div>`;
+}
+
+function hero(){
+  const spx = R.indices.find(i=>i.symbol==="^GSPC");
+  const ndq = R.indices.find(i=>i.symbol==="^IXIC");
+  const y10 = R.yields.find(y=>y.tenor==="10年期");
+  const brent = R.commodities.find(c=>c.symbol==="BZ=F");
+  const vix = R.vix, dxy = R.commodities.find(c=>c.symbol==="DX-Y.NYB");
+  return `<div class="hero">
+    ${heroCell("S&P 500", fmt(spx?.close), spx?.chg_pct)}
+    ${heroCell("NASDAQ 綜合", fmt(ndq?.close), ndq?.chg_pct)}
+    ${heroCell("10Y UST", y10?fy10():"—", y10?.chg_bp!=null?null:null,"")}
+    ${heroCell("Brent", fmt(brent?.value), brent?.chg_pct)}
+    ${heroCell("VIX", fmt(vix?.close), vix?.chg_pct)}
+    ${heroCell("DXY", fmt(dxy?.value), dxy?.chg_pct)}
+  </div>`;
+  function fy10(){ return y10.yield.toFixed(2)+"%"; }
+}
+
+function indicesTable(){
+  const rows = R.indices.map(i => `<tr>
+    <td class="name-cell">${i.name}<div style="font-weight:400;font-size:11px;color:var(--muted)">${i.symbol}</div></td>
+    <td class="cell-stack"><div class="p1">${fmt(i.close)}</div>
+      <div class="p2 ${tone(i.chg_pct)}">${signPct(i.chg_pct)} (${i.chg>0?"+":""}${fmt(i.chg)})</div></td>
+    <td class="${tone(pctFrom(i.close,i.w1))}">${fmt(i.w1)}<div class="p2">${signPct(pctFrom(i.close,i.w1))}</div></td>
+    <td class="${tone(pctFrom(i.close,i.m1))}">${fmt(i.m1)}<div class="p2">${signPct(pctFrom(i.close,i.m1))}</div></td>
+  </tr>`).join("");
+  function pctFrom(now, then){ if(now==null||then==null) return null; return (now/then-1)*100; }
+  return `<table>
+    <thead><tr><th>指數</th><th>收盤／日變動</th><th>一週前</th><th>一個月前</th></tr></thead>
+    <tbody>${rows}</tbody></table>
+    ${R.vix?.note ? `<div class="note">VIX ${R.vix.note}</div>` : ""}
+    ${R.commentary?.indices ? `<div class="note">${R.commentary.indices}</div>` : ""}`;
+}
+
+function yieldsTable(){
+  const rows = R.yields.map(y => `<tr>
+    <td class="name-cell">${y.tenor}</td>
+    <td>${y.yield?.toFixed(2)}%</td>
+    <td class="${tone(y.chg_bp)}">${signBp(y.chg_bp)}</td>
+    <td>${y.w1!=null? y.w1.toFixed(2)+"%":"—"}<div class="p2 ${tone(y.w1_chg_bp)}">${signBp(y.w1_chg_bp)}</div></td>
+    <td>${y.m1!=null? y.m1.toFixed(2)+"%":"—"}<div class="p2 ${tone(y.m1_chg_bp)}">${signBp(y.m1_chg_bp)}</div></td>
+  </tr>`).join("");
+  const s = R.spreads || {};
+  return `<table>
+    <thead><tr><th>天期</th><th>殖利率</th><th>日變動</th><th>一週前</th><th>一個月前</th></tr></thead>
+    <tbody>${rows}</tbody></table>
+    <div class="note">
+      利差：2s10s（10Y−2Y）${s["2s10s"]!=null? s["2s10s"]+" bp":"—"}
+      ・30Y−10Y ${s["30s10s"]!=null? s["30s10s"]+" bp":"—"}
+      ${R.commentary?.yields ? "。"+R.commentary.yields : ""}
+    </div>`;
+}
+
+function commoditiesTable(){
+  const rows = R.commodities.map(c => `<tr>
+    <td class="name-cell">${c.name}</td>
+    <td>${fmt(c.value)}${c.unit? " "+c.unit:""}</td>
+    <td class="${tone(c.chg_pct)}">${signPct(c.chg_pct)}</td>
+  </tr>`).join("");
+  return `<table><tbody>${rows}</tbody></table>
+    ${R.commentary?.commodities ? `<div class="note">${R.commentary.commodities}</div>` : ""}`;
+}
+
+function cpiBlock(){
+  const c = R.cpi;
+  if(!c) return "";
+  const row = (label, val, prev) => `<div class="kv"><span>${label}</span>
+    <span>${val==null?"—":val.toFixed(1)+"%"}${prev!=null? ` <span style="color:var(--muted)">（前值 ${prev.toFixed(1)}%）</span>`:""}</span></div>`;
+  return `${row("CPI 年增（"+c.period+"）", c.yoy, c.yoy_prev)}
+    ${row("CPI 月增", c.mom, c.mom_prev)}
+    ${row("核心 CPI 年增", c.core_yoy, c.core_yoy_prev)}
+    ${row("核心 CPI 月增", c.core_mom, c.core_mom_prev)}
+    ${R.commentary?.cpi ? `<div class="note">${R.commentary.cpi}</div>` : ""}
+    ${R.claims ? `<div class="kv" style="margin-top:8px"><span>初領失業救濟金（當週 ${R.claims.week_of}）</span>
+      <span>${R.claims.value_k} 萬人 <span style="color:var(--muted)">（前值 ${R.claims.prior_k} 萬人）</span></span></div>` : ""}
+    ${R.commentary?.claims ? `<div class="note">${R.commentary.claims}</div>` : ""}`;
+}
+
+function calendarBlock(){
+  if(!R.calendar?.length) return `<p style="color:var(--muted);font-size:13px">目前沒有排定事件。</p>`;
+  return R.calendar.map(e => `<div class="cal-row"><div class="d">${e.date}</div><div>${e.desc}</div></div>`).join("");
+}
+
+function fedwatchBlock(){
+  const f = R.fedwatch;
+  if(!f) return `<p style="color:var(--muted);font-size:13px">目前無法取得期貨定價資料。</p>`;
+  return `<div style="font-size:13px;color:var(--muted)">下次會議：${f.meeting_date||"—"}・目前目標區間 ${f.target_range}</div>
+    <div class="fed-bar">
+      <div style="width:${f.hold_prob}%;background:var(--down)">${f.hold_prob>=8?f.hold_prob+"%":""}</div>
+      <div style="width:${f.move_prob}%;background:var(--up)">${f.move_prob>=8?f.move_prob+"%":""}</div>
+    </div>
+    <div class="fed-legend">
+      <span><span class="swatch" style="background:var(--down)"></span>維持不變 ${f.hold_prob}%</span>
+      <span><span class="swatch" style="background:var(--up)"></span>調升 25bp ${f.move_prob}%</span>
+    </div>
+    <div class="note">${f.methodology_note}${R.commentary?.fedwatch? " "+R.commentary.fedwatch:""}</div>`;
+}
+
+function watchlist(){
+  const items = [
+    {k:"10 年期公債殖利率", t:"站上 5.00%", m:"市場對緊縮路徑的定價進一步深化"},
+    {k:"2s10s 利差", t:"轉負（倒掛）", m:"短端升息預期壓過長端通膨疑慮"},
+    {k:"Brent 原油", t:"站回 108 美元以上", m:"地緣風險溢價重新主導油價"},
+    {k:"DXY", t:"站上 100", m:"反映利差擴大帶動資金流向美元資產"},
+  ];
+  return items.map(i => `<div class="watch-row">
+    <div><div class="th">觀察指標</div>${i.k}</div>
+    <div><div class="th">門檻</div><span class="thr">${i.t}</span></div>
+    <div><div class="th">意義</div>${i.m}</div>
+  </div>`).join("");
+}
+
+function sourcesBlock(){
+  return `<ol class="sources">${R.sources.map(s=>`<li>${s.label}<br>${s.url}</li>`).join("")}</ol>
+    <p class="legend-foot">${R.disclaimer}</p>
+    <p class="legend-foot">
+      <span class="swatch" style="background:var(--up)"></span>紅＝上漲／殖利率上行　
+      <span class="swatch" style="background:var(--down)"></span>綠＝下跌／殖利率下行
+    </p>
+    <p class="legend-foot">產生於 ${new Date(R.generated_at).toLocaleString("zh-TW")}${R.commentary && Object.keys(R.commentary).length===0 ? "（本次未附 AI 解讀，可設定 ANTHROPIC_API_KEY 開啟）":""}</p>`;
+}
+
+function section(num, title, tag, bodyHtml){
+  return `<section><div class="sec-head">
+    <span class="sec-num serif">${num}</span>
+    <span class="sec-title">${title}</span>
+    <span class="sec-tag">${tag}</span>
+  </div>${bodyHtml}</section>`;
+}
+
+function render(){
+  $("#app").innerHTML = `
+    <div class="eyebrow"><span>DAILY MARKET OBSERVATION</span><span>機構研究用・非投資建議</span></div>
+    <h1 class="serif">每日市場觀察</h1>
+    <div class="meta"><span>發布　<b>${R.report_date}</b></span><span>幣別　<b>USD</b></span></div>
+    ${hero()}
+    ${section("一","美股行情","US EQUITIES", indicesTable())}
+    ${section("二","債市與商品","RATES · COMMODITIES", yieldsTable() + `<div style="height:14px"></div>` + commoditiesTable())}
+    ${section("三","重要經濟數據","DATA RELEASES", cpiBlock())}
+    ${section("四","未來關鍵事件","CALENDAR", calendarBlock())}
+    ${section("五","Fed 政策路徑訊號","FUTURES-IMPLIED", fedwatchBlock())}
+    ${section("六","後續觀察重點","WATCH LIST", watchlist())}
+    ${section("　","資料來源","SOURCES", sourcesBlock())}
+  `;
+}
+
+function loadDate(d){
+  const path = d ? `data/history/${d}.json` : "data/latest.json";
+  fetch(path + "?t=" + Date.now())
+    .then(r => r.ok ? r.json() : Promise.reject(r.status))
+    .then(j => { R = j; render(); })
+    .catch(() => {
+      $("#app").innerHTML = `<p class="state">還沒有資料。到 GitHub 的 Actions 頁面手動執行一次
+        「Refresh market report」，完成後重新整理即可。</p>`;
+    });
+}
+
+$("#btn-theme").addEventListener("click", () => {
+  const cur = document.documentElement.getAttribute("data-theme");
+  document.documentElement.setAttribute("data-theme", cur === "dark" ? "light" : "dark");
+});
+$("#btn-print").addEventListener("click", () => window.print());
+$("#btn-save").addEventListener("click", () => {
+  const blob = new Blob([document.documentElement.outerHTML], {type:"text/html"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `market-observation-${R?.report_date || "latest"}.html`;
+  a.click();
+});
+$("#btn-hist").addEventListener("click", () => {
+  fetch("data/history/index.json?t=" + Date.now())
+    .then(r => r.json())
+    .then(dates => {
+      dates = dates.slice().reverse();
+      $("#hist-list").innerHTML = dates.map(d =>
+        `<button class="dateitem" data-d="${d}">${d}</button>`).join("") ||
+        `<p style="color:var(--muted)">尚無歷史紀錄</p>`;
+      $("#hist-list").querySelectorAll("button").forEach(b =>
+        b.addEventListener("click", () => { loadDate(b.dataset.d); $("#hist-modal").classList.remove("open"); }));
+      $("#hist-modal").classList.add("open");
+    })
+    .catch(() => { $("#hist-list").innerHTML = `<p style="color:var(--muted)">尚無歷史紀錄</p>`; $("#hist-modal").classList.add("open"); });
+});
+$("#hist-close").addEventListener("click", () => $("#hist-modal").classList.remove("open"));
+
+loadDate();
+</script>
+</body>
+</html>
