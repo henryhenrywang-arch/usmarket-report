@@ -1,0 +1,186 @@
+{
+ "generated_at": "2026-09-13T12:21:36+00:00",
+ "report_date": "2026-09-13",
+ "indices": [
+  {
+   "symbol": "^GSPC",
+   "name": "S&P 500",
+   "close": 7656.98,
+   "chg": 65.28,
+   "chg_pct": 0.86,
+   "w1": 7747.71,
+   "w1_pct": -1.17,
+   "m1": 7748.5,
+   "m1_pct": -1.18,
+   "asof": "2026-09-11"
+  },
+  {
+   "symbol": "^IXIC",
+   "name": "Nasdaq 綜合",
+   "close": 26333.04,
+   "chg": 251.32,
+   "chg_pct": 0.96,
+   "w1": 26584.06,
+   "w1_pct": -0.94,
+   "m1": 26588.49,
+   "m1_pct": -0.96,
+   "asof": "2026-09-11"
+  },
+  {
+   "symbol": "^DJI",
+   "name": "道瓊工業",
+   "close": 52573.29,
+   "chg": 509.19,
+   "chg_pct": 0.98,
+   "w1": 53686.11,
+   "w1_pct": -2.07,
+   "m1": 53770.27,
+   "m1_pct": -2.23,
+   "asof": "2026-09-11"
+  },
+  {
+   "symbol": "^SOX",
+   "name": "費城半導體",
+   "close": 11824.0,
+   "chg": 209.83,
+   "chg_pct": 1.81,
+   "w1": 11352.13,
+   "w1_pct": 4.16,
+   "m1": 12399.38,
+   "m1_pct": -4.64,
+   "asof": "2026-09-11"
+  }
+ ],
+ "vix": {
+  "close": 15.84,
+  "chg_pct": -11.21,
+  "note": "較前一交易日 17.84 下降約 11.2%"
+ },
+ "yields": [
+  {
+   "tenor": "2年期",
+   "yield": 4.56,
+   "prior": 4.43,
+   "chg_bp": 13.0,
+   "w1": 4.39,
+   "w1_chg_bp": 17.0,
+   "m1": 4.22,
+   "m1_chg_bp": 34.0,
+   "asof": "2026-09-10"
+  },
+  {
+   "tenor": "5年期",
+   "yield": 4.75,
+   "prior": 4.61,
+   "chg_bp": 14.0,
+   "w1": 4.54,
+   "w1_chg_bp": 21.0,
+   "m1": 4.39,
+   "m1_chg_bp": 36.0,
+   "asof": "2026-09-10"
+  },
+  {
+   "tenor": "10年期",
+   "yield": 4.95,
+   "prior": 4.83,
+   "chg_bp": 12.0,
+   "w1": 4.79,
+   "w1_chg_bp": 16.0,
+   "m1": 4.7,
+   "m1_chg_bp": 25.0,
+   "asof": "2026-09-10"
+  },
+  {
+   "tenor": "30年期",
+   "yield": 5.37,
+   "prior": 5.28,
+   "chg_bp": 9.0,
+   "w1": 5.27,
+   "w1_chg_bp": 10.0,
+   "m1": 5.24,
+   "m1_chg_bp": 13.0,
+   "asof": "2026-09-10"
+  }
+ ],
+ "spreads": {
+  "2s10s": 39.0,
+  "30s10s": 42.0
+ },
+ "commodities": [
+  {
+   "symbol": "CL=F",
+   "name": "WTI 原油（期貨結算）",
+   "unit": "美元/桶",
+   "value": 100.05,
+   "chg_pct": -2.37,
+   "asof": "2026-09-11"
+  },
+  {
+   "symbol": "BZ=F",
+   "name": "Brent 原油（期貨結算）",
+   "unit": "美元/桶",
+   "value": 104.61,
+   "chg_pct": -2.81,
+   "asof": "2026-09-11"
+  },
+  {
+   "symbol": "GC=F",
+   "name": "黃金（期貨）",
+   "unit": "美元/盎司",
+   "value": 4408.9,
+   "chg_pct": 1.02,
+   "asof": "2026-09-11"
+  },
+  {
+   "symbol": "DX-Y.NYB",
+   "name": "美元指數 DXY",
+   "unit": null,
+   "value": 99.12,
+   "chg_pct": 0.03,
+   "asof": "2026-09-11"
+  }
+ ],
+ "cpi": {
+  "period": "2026-08",
+  "yoy": 3.71,
+  "yoy_prev": 3.54,
+  "mom": 0.4,
+  "mom_prev": 0.07,
+  "core_yoy": 2.76,
+  "core_yoy_prev": 2.79,
+  "core_mom": 0.29,
+  "core_mom_prev": 0.22
+ },
+ "claims": {
+  "value_k": 206.0,
+  "prior_k": 207.0,
+  "week_of": "2026-09-05"
+ },
+ "fedwatch": null,
+ "calendar": [
+  {
+   "date": "2026-09-15",
+   "desc": "FOMC 會議日"
+  },
+  {
+   "date": "2026-09-15",
+   "desc": "FOMC 靜默期前後，官員談話減少"
+  }
+ ],
+ "sources": [
+  {
+   "label": "U.S. Treasury Daily Par Yield Curve",
+   "url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve"
+  },
+  {
+   "label": "FRED (CPI / claims / Fed target range)",
+   "url": "https://fred.stlouisfed.org/"
+  },
+  {
+   "label": "Yahoo Finance (指數、商品、期貨)",
+   "url": "https://finance.yahoo.com/"
+  }
+ ],
+ "disclaimer": "本報告為公開市場數據之彙整與觀察，不構成投資建議，不含買賣建議、配置比重或目標價。",
+ "commentary": {}
+}
